@@ -598,16 +598,55 @@
   </div>
 
   <!-- JavaScript đồng hồ -->
+  <!-- Thẻ nhạc ẩn -->
+  <audio id="bg-audio" loop preload="auto">
+    <source src="mo.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- JavaScript đồng hồ & Tự động phát nhạc khi chạm -->
   <script>
     function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
-      document.getElementById('live-time').innerHTML = `${h}:${m}:${s} <i class="fa-solid fa-moon" style="color: #6c5ce7;"></i>`;
+      const timeElem = document.getElementById('live-time');
+      if (timeElem) {
+        timeElem.innerHTML = `${h}:${m}:${s} <i class="fa-solid fa-moon" style="color: #6c5ce7;"></i>`;
+      }
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    const audio = document.getElementById('bg-audio');
+    const musicBtn = document.querySelector('.music-player');
+
+    function startMusic() {
+      if (audio && audio.paused) {
+        audio.play().catch(() => {});
+      }
+      window.removeEventListener('click', startMusic);
+      window.removeEventListener('touchstart', startMusic);
+      window.removeEventListener('scroll', startMusic);
+    }
+
+    // Tự động phát khi chạm hoặc lướt màn hình
+    window.addEventListener('click', startMusic);
+    window.addEventListener('touchstart', startMusic);
+    window.addEventListener('scroll', startMusic);
+
+    // Bật / tắt khi ấn thẳng vào nút widget nghe nhạc ở góc phải
+    if (musicBtn) {
+      musicBtn.style.cursor = 'pointer';
+      musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      });
+    }
   </script>
 </body>
 </html>
