@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Công Đại - Bio Link</title>
+  <!-- Font chữ & FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #0c0d14;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 80px;
+    }
+
+    /* Thanh trạng thái thời gian trên cùng */
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .time-badge {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    /* Avatar phát sáng */
+    .avatar-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .avatar-wrapper::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 0 35px 10px rgba(255, 100, 100, 0.35);
+      background: radial-gradient(circle, rgba(255, 120, 120, 0.2) 0%, transparent 70%);
+      animation: pulse 3s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      100% { transform: scale(1.05); opacity: 1; }
+    }
+
+    .avatar-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      object-fit: cover;
+      z-index: 2;
+    }
+
+    /* Tên tài khoản */
+    .username-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .verified-icon {
+      color: #00b0ff;
+    }
+
+    /* Tiêu đề chính */
+    .title-banner {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #e0e0e0;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 5px 15px rgba(230, 30, 30, 0.8);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Nút tải game lớn */
+    .download-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 30px;
+      background: rgba(20, 22, 32, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .download-btn:active {
+      transform: scale(0.98);
+      border-color: #ff3366;
+    }
+
+    /* Lưới thống kê 3 ô */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .stat-card {
+      background: #11131c;
+      border-radius: 14px;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 1px solid transparent;
+    }
+
+    .stat-card.red { border-color: rgba(255, 75, 75, 0.35); box-shadow: inset 0 0 10px rgba(255, 50, 50, 0.1); }
+    .stat-card.cyan { border-color: rgba(30, 220, 180, 0.35); box-shadow: inset 0 0 10px rgba(30, 220, 180, 0.1); }
+    .stat-card.yellow { border-color: rgba(255, 180, 30, 0.35); box-shadow: inset 0 0 10px rgba(255, 180, 30, 0.1); }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .stat-header i {
+      font-size: 12px;
+      padding: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-label {
+      font-size: 9px;
+      color: #888;
+      margin-top: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .crown-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      color: #ffd700;
+      font-size: 10px;
+    }
+
+    /* Nhãn đăng ký */
+    .sub-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #d1b3ff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Nút Mạng xã hội */
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .social-btn {
+      padding: 12px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-youtube {
+      background: linear-gradient(135deg, rgba(230, 30, 30, 0.35), rgba(30, 10, 10, 0.8));
+      border-color: rgba(255, 50, 50, 0.4);
+    }
+
+    .btn-tiktok {
+      background: linear-gradient(135deg, rgba(30, 200, 200, 0.25), rgba(10, 20, 30, 0.8));
+      border-color: rgba(30, 220, 220, 0.4);
+    }
+
+    /* Thanh tìm kiếm */
+    .search-tip {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    /* Danh mục viền tím phát sáng */
+    .category-header {
+      align-self: flex-start;
+      background: linear-gradient(90deg, rgba(160, 32, 240, 0.3), rgba(60, 20, 90, 0.2));
+      border: 1px solid rgba(186, 85, 211, 0.5);
+      box-shadow: 0 0 12px rgba(186, 85, 211, 0.3);
+      padding: 6px 14px;
+      border-radius: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .category-header span {
+      color: #888;
+      font-size: 10px;
+    }
+
+    .sub-header-banner {
+      width: 100%;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(25, 27, 38, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Thẻ nội dung (Cards) */
+    .content-card {
+      width: 100%;
+      position: relative;
+      background: linear-gradient(135deg, #131422, #0d0e17);
+      border: 1px solid rgba(150, 100, 255, 0.25);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      border-radius: 18px;
+      padding: 14px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .heart-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .card-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .icon-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .card-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-size: 10px;
+      color: #aaa;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .tag {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tag-pink {
+      background: rgba(255, 60, 120, 0.15);
+      border-color: rgba(255, 60, 120, 0.4);
+      color: #ff659c;
+    }
+
+    .tag-green {
+      background: rgba(0, 230, 150, 0.15);
+      border-color: rgba(0, 230, 150, 0.4);
+      color: #00e696;
+    }
+
+    .tag-blue {
+      background: rgba(0, 180, 255, 0.15);
+      border-color: rgba(0, 180, 255, 0.4);
+      color: #38bdf8;
+    }
+
+    .action-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .action-btn:active {
+      transform: scale(0.92);
+    }
+
+    .purple-btn {
+      background: #b5179e;
+      box-shadow: 0 0 15px rgba(181, 23, 158, 0.7);
+    }
+
+    .cyan-btn {
+      background: #0ea5e9;
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.7);
+    }
+
+    /* Widget nghe nhạc cố định */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      right: 16px;
+      background: rgba(100, 40, 150, 0.65);
+      border: 1px solid rgba(200, 120, 255, 0.4);
+      backdrop-filter: blur(8px);
+      padding: 8px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Đồng hồ góc trên -->
+    <div class="top-bar">
+      <div class="time-badge" id="live-time">
+        00:00:00 <i class="fa-solid fa-moon" style="color: #6c5ce7;"></i>
+      </div>
+      <div class="actions">
+        <a href="#" class="icon-btn"><i class="fa-solid fa-bell"></i></a>
+        <a href="#" class="icon-btn"><i class="fa-solid fa-bars"></i></a>
+      </div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-wrapper">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Avatar" class="avatar-img">
+    </div>
+
+    <!-- Tên người dùng -->
+    <div class="username-badge">
+      Ma Công Đại <i class="fa-solid fa-circle-check verified-icon"></i>
+    </div>
+
+    <!-- Tiêu đề thương hiệu -->
+    <div class="title-banner">
+      <span>✟</span> MA CÔNG ĐẠI <span>✟</span>
+    </div>
+
+    <!-- Nút tải chính -->
+    <a href="#" class="download-btn">
+      <span>✟</span> <i class="fa-solid fa-gamepad"></i> TẢI GAME NGAY ↓ <span>✟</span>
+    </a>
+
+    <!-- Thống kê -->
+    <div class="stats-grid">
+      <div class="stat-card red">
+        <div class="stat-header">
+          <i class="fa-solid fa-eye" style="color: #ff5252;"></i> 8.688
+        </div>
+        <div class="stat-label">LƯỢT XEM</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-header">
+          <i class="fa-solid fa-rotate" style="color: #00e676;"></i> 2.026
+        </div>
+        <div class="stat-label">CẬP NHẬT</div>
+      </div>
+      <div class="stat-card yellow">
+        <span class="crown-badge"><i class="fa-solid fa-crown"></i></span>
+        <div class="stat-header">
+          <i class="fa-solid fa-mobile-screen" style="color: #ffb142;"></i> #1
+        </div>
+        <div class="stat-label">VIP</div>
+      </div>
+    </div>
+
+    <!-- Đăng ký kênh -->
+    <div class="sub-badge">
+      <i class="fa-solid fa-rss"></i> THEO DÕI MA CÔNG ĐẠI TẠI ĐÂY
+    </div>
+
+    <!-- Nút mạng xã hội -->
+    <div class="social-grid">
+      <a href="https://youtube.com" target="_blank" class="social-btn btn-youtube">
+        <i class="fa-brands fa-youtube" style="color: #ff0000;"></i> Youtube
+      </a>
+      <a href="https://tiktok.com" target="_blank" class="social-btn btn-tiktok">
+        <i class="fa-brands fa-tiktok" style="color: #00f2fe;"></i> TikTok
+      </a>
+    </div>
+
+    <!-- Ô tìm kiếm -->
+    <div class="search-tip">
+      <i class="fa-solid fa-percent" style="color: #ff4b4b;"></i>
+      <span>Hỗ trợ tiếng Việt có dấu / không dấu và từ khóa gần đúng</span>
+    </div>
+
+    <!-- DANH MỤC 1 -->
+    <div class="category-header">
+      <i class="fa-solid fa-tv"></i> VIDEO HƯỚNG DẪN <span>// MA CÔNG ĐẠI</span>
+    </div>
+
+    <div class="content-card">
+      <button class="heart-btn"><i class="fa-regular fa-heart"></i></button>
+      <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80" alt="Thumb" class="card-thumb">
+      <div class="card-info">
+        <div class="card-title">Hướng Dẫn Cài Đặt Bản Mod</div>
+        <div class="card-desc">• Xem kỹ video hướng dẫn từ Ma Công Đại</div>
+        <div class="card-tags">
+          <span class="tag tag-pink"><i class="fa-solid fa-video"></i> Hướng Dẫn</span>
+          <span class="tag tag-green"><i class="fa-solid fa-shield-halved"></i> An Toàn</span>
+        </div>
+      </div>
+      <a href="#" target="_blank" class="action-btn purple-btn">
+        <i class="fa-solid fa-chevron-right"></i>
+      </a>
+    </div>
+
+    <!-- DANH MỤC 2 -->
+    <div class="category-header">
+      <i class="fa-solid fa-folder-open"></i> TÀI NGUYÊN GAME <span>// MA CÔNG ĐẠI</span>
+    </div>
+
+    <div class="sub-header-banner">
+      <span>✟</span> TÀI NGUYÊN TẢI XUỐNG
+    </div>
+
+    <div class="content-card">
+      <button class="heart-btn"><i class="fa-regular fa-heart"></i></button>
+      <div class="icon-thumb" style="background: #1877f2;">
+        <i class="fa-brands fa-facebook-f"></i>
+      </div>
+      <div class="card-info">
+        <div class="card-title">FILE CẤU HÌNH VIP</div>
+        <div class="card-desc">• Bản quyền chia sẻ bởi Ma Công Đại</div>
+        <div class="card-tags">
+          <span class="tag tag-blue"><i class="fa-brands fa-apple"></i> iOS</span>
+          <span class="tag tag-green"><i class="fa-brands fa-android"></i> Android</span>
+        </div>
+      </div>
+      <a href="#" target="_blank" class="action-btn cyan-btn">
+        <i class="fa-solid fa-cloud-arrow-down"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Nút nghe nhạc -->
+  <div class="music-player">
+    <i class="fa-solid fa-music"></i>
+    <i class="fa-solid fa-bars-staggered"></i>
+    <i class="fa-solid fa-pause"></i>
+  </div>
+
+  <!-- JavaScript đồng hồ -->
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('live-time').innerHTML = `${h}:${m}:${s} <i class="fa-solid fa-moon" style="color: #6c5ce7;"></i>`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
