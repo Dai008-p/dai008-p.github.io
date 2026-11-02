@@ -470,9 +470,29 @@
       <div class="time-badge" id="live-time">
         00:00:00 <i class="fa-solid fa-moon" style="color: #6c5ce7;"></i>
       </div>
-      <div class="actions">
-        <a href="#" class="icon-btn"><i class="fa-solid fa-bell"></i></a>
-        <a href="#" class="icon-btn"><i class="fa-solid fa-bars"></i></a>
+      <div class="actions" style="position: relative;">
+        <!-- Nút chuông thông báo -->
+        <button id="btn-bell" class="icon-btn" style="background:none; border:none; color:inherit; cursor:pointer;" title="Thông báo">
+          <i class="fa-solid fa-bell"></i>
+        </button>
+
+        <!-- Nút menu 3 gạch -->
+        <button id="btn-menu" class="icon-btn" style="background:none; border:none; color:inherit; cursor:pointer;" title="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Hộp thông báo popup (Bật/Tắt) -->
+        <div id="notice-box" style="display:none; position:absolute; top:45px; right:50px; background:rgba(30,30,40,0.95); border:1px solid #444; border-radius:12px; padding:12px 16px; width:220px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:99; backdrop-filter:blur(8px); text-align:left;">
+          <div style="font-size:13px; font-weight:bold; color:#a29bfe; margin-bottom:4px;">Thông báo</div>
+          <div style="font-size:12px; color:#ddd; line-height:1.4;">Chào mừng bạn đã ghé thăm trang cá nhân của mình! Chúc bạn một ngày tốt lành ✨</div>
+        </div>
+
+        <!-- Menu dropdown (Chứa nút Donate) -->
+        <div id="menu-dropdown" style="display:none; position:absolute; top:45px; right:0; background:rgba(30,30,40,0.95); border:1px solid #444; border-radius:12px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:99; backdrop-filter:blur(8px); overflow:hidden;">
+          <a href="javascript:void(0)" id="btn-open-donate" style="display:flex; align-items:center; gap:10px; padding:12px 16px; color:#fff; text-decoration:none; font-size:13px; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">
+            <i class="fa-solid fa-heart" style="color:#ff7675;"></i> Donate cho mình
+          </a>
+        </div>
       </div>
     </div>
 
@@ -630,7 +650,7 @@
       window.removeEventListener('scroll', startMusic);
     }
 
-    // Tự động phát khi chạm hoặc lướt màn hình
+    /// Tự động phát khi chạm hoặc lướt màn hình
     window.addEventListener('click', startMusic);
     window.addEventListener('touchstart', startMusic);
     window.addEventListener('scroll', startMusic);
@@ -647,6 +667,72 @@
         }
       });
     }
+  </script>
+
+  <!-- Popup Modal Donate QR -->
+  <div id="donate-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; padding:15px; backdrop-filter:blur(5px);">
+    <div style="background:#1e1e28; border:1px solid #333; border-radius:20px; padding:24px 20px; max-width:320px; width:100%; text-align:center; position:relative; box-shadow:0 12px 35px rgba(0,0,0,0.6);">
+      <button id="btn-close-donate" style="position:absolute; top:12px; right:15px; background:none; border:none; color:#888; font-size:22px; cursor:pointer;">&times;</button>
+      <div style="font-size:16px; font-weight:bold; color:#fff; margin-bottom:4px;">Ủng hộ / Donate</div>
+      <div style="font-size:12px; color:#aaa; margin-bottom:14px;">Quét mã VietQR để chuyển khoản</div>
+      
+      <img src="https://img.vietqr.io/image/MB-16070812345-compact2.png?amount=&addInfo=Donate&accountName=MA%20CONG%20DAI" alt="VietQR Donate" style="width:100%; border-radius:12px; background:#fff; padding:6px; display:block; margin:0 auto;" />
+      
+      <div style="margin-top:12px; font-size:13px; color:#f1f2f6; font-weight:600;">MA CONG DAI</div>
+      <div style="font-size:12px; color:#74b9ff;">MB Bank: 16070812345</div>
+    </div>
+  </div>
+
+  <!-- JavaScript điều khiển Thông báo & Menu Donate -->
+  <script>
+    const btnBell = document.getElementById('btn-bell');
+    const noticeBox = document.getElementById('notice-box');
+    const btnMenu = document.getElementById('btn-menu');
+    const menuDropdown = document.getElementById('menu-dropdown');
+    const btnOpenDonate = document.getElementById('btn-open-donate');
+    const donateModal = document.getElementById('donate-modal');
+    const btnCloseDonate = document.getElementById('btn-close-donate');
+
+    // Bật/tắt popup Thông báo
+    if (btnBell && noticeBox) {
+      btnBell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (menuDropdown) menuDropdown.style.display = 'none';
+        noticeBox.style.display = (noticeBox.style.display === 'block') ? 'none' : 'block';
+      });
+    }
+
+    // Bật/tắt Menu 3 gạch
+    if (btnMenu && menuDropdown) {
+      btnMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (noticeBox) noticeBox.style.display = 'none';
+        menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
+      });
+    }
+
+    // Bấm Donate -> Mở Modal mã QR
+    if (btnOpenDonate && donateModal) {
+      btnOpenDonate.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (menuDropdown) menuDropdown.style.display = 'none';
+        donateModal.style.display = 'flex';
+      });
+    }
+
+    // Đóng Modal khi bấm nút X
+    if (btnCloseDonate && donateModal) {
+      btnCloseDonate.addEventListener('click', () => {
+        donateModal.style.display = 'none';
+      });
+    }
+
+    // Bấm ra ngoài khoảng trống tự đóng
+    window.addEventListener('click', (e) => {
+      if (noticeBox) noticeBox.style.display = 'none';
+      if (menuDropdown) menuDropdown.style.display = 'none';
+      if (donateModal && e.target === donateModal) donateModal.style.display = 'none';
+    });
   </script>
 </body>
 </html>
