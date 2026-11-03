@@ -520,7 +520,7 @@
     <div class="stats-grid">
       <div class="stat-card red">
         <div class="stat-header">
-          <i class="fa-solid fa-eye" style="color: #ff5252;"></i> 8.688
+          <i class="fa-solid fa-eye" style="color: #ff5252;"></i> <span id="view-count">8.688</span>
         </div>
         <div class="stat-label">LƯỢT XEM</div>
       </div>
@@ -733,6 +733,25 @@
       if (menuDropdown) menuDropdown.style.display = 'none';
       if (donateModal && e.target === donateModal) donateModal.style.display = 'none';
     });
+  </script>
+  <!-- Tự động tăng lượt xem khi có người vào trang -->
+  <script>
+    (function() {
+      const BASE_VIEWS = 8688;
+      const viewElem = document.getElementById('view-count');
+
+      fetch('https://api.counterapi.dev/v1/dai008-p.github.io/views/up')
+        .then(res => res.json())
+        .then(data => {
+          if (data && typeof data.count === 'number' && viewElem) {
+            const total = BASE_VIEWS + data.count;
+            viewElem.textContent = total.toLocaleString('vi-VN');
+          }
+        })
+        .catch(() => {
+          if (viewElem) viewElem.textContent = "8.688";
+        });
+    })();
   </script>
 </body>
 </html>
